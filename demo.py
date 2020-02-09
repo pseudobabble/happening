@@ -27,10 +27,10 @@ class HappeningWatcher(Subscriber):
         print('{} initialised with state {}'.format(self, self.state))
 
     def handle(self, event: Event) -> None:
-        self.state_mutator(event.get_payload())
+        self.mutate_state(event.get_payload())
         print('Handled {}, updated state to {}'.format(event, self.state))
 
-    def state_mutator(self, new_state: dict) -> None:
+    def mutate_state(self, new_state: dict) -> None:
         self.state.update(new_state)
         self.dependency.inject_foo(self.state)
 
