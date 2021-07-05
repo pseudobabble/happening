@@ -1,14 +1,18 @@
 #!/usr/bin/env python
-from abc import abstractmethod
-from typing import Union
+from abc import abstractmethod, ABC
+from typing import Any
 
 
-class Event:
+class Event():
 
-    identifier: str = NotImplemented
+    def __init__(self, payload: Any) -> None:
+        self._payload = payload
 
-    payload: Union[dict, list] = NotImplemented
-
+    @property
     @abstractmethod
-    def get_payload(self) -> Union[dict, list]:
-        return self.payload
+    def identifier() -> str:
+        raise NotImplementedError(f'You must implement `identifier` on {self.__class__.__name__}')
+
+    @property
+    def payload(self) -> Any:
+        return self._payload

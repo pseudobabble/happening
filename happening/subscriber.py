@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 from happening.event import Event
 
 
-class Subscriber:
+class Subscriber(ABC):
 
     @abstractmethod
     def handle(self, event: Event):
