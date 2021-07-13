@@ -61,3 +61,9 @@ if __name__ == '__main__':
     controller = UserController()                                                 
     controller.add_user(fake_request)
 ```
+
+## Tests
+
+``` bash
+python3 -m unittest
+```

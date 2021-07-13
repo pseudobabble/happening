@@ -10,7 +10,7 @@ class Event():
 
     @property
     @abstractmethod
-    def identifier() -> str:
+    def identifier(self) -> str:
         raise NotImplementedError(f'You must implement `identifier` on {self.__class__.__name__}')
 
     @property
