@@ -29,13 +29,13 @@ class RegistrationConfirmationEmailSender(Subscriber):
 
 class MyEventBus(EventBus):
     subscriptions = {
-        UserAdded.identifier: RegistrationConfirmationEmailSender
+        UserAdded.identifier: [RegistrationConfirmationEmailSender]
     }
 
 
 class UserController:
 
-    def __init__(self, event_bus: EventBus = MyEventBus) -> None:
+    def __init__(self, event_bus: EventBus = MyEventBus()) -> None:
         self.event_bus: EventBus = event_bus
 
     def add_user(self, request) -> None:
