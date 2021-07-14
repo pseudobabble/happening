@@ -8,4 +8,4 @@ class Subscriber(ABC):
 
     @abstractmethod
     def handle(self, event: Event):
-        raise NotImplemented
+        raise NotImplementedError('You must implement `handle` on {self.__class__.__name__}')

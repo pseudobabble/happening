@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import unittest
 from unittest import TestCase
-from unittest.mock import MagicMock
 
 from happening.event import Event
 from happening.event_bus import EventBus
@@ -16,9 +15,7 @@ class RecorderSubscriber(Subscriber):
     never get access to it in the test scope.
     """
 
-    def __init__(self, argument_1='fake', argument_2='fake'):
-        self.argument_1 = argument_1
-        self.argument_2 = argument_2
+    def __init__(self):
         self.handled_events = []
 
     def __call__(self):
@@ -42,14 +39,44 @@ class TestEventBus(TestCase):
         mock_handler_2 = RecorderSubscriber()
 
         class TestEventBus(EventBus):
-            subscriptions = {'1': mock_handler_1, '2': mock_handler_2}
+            subscriptions = {'1': [mock_handler_1], '2': [mock_handler_2]}
 
         test_event_bus = TestEventBus()
-        event = TestEvent('relevant')
+        event = TestEvent('irrelevant')
         test_event_bus.issue_synchronous(event)
 
-        assert mock_handler_1.handled_events[0] == 'relevant'
+        assert mock_handler_1.handled_events[0] == event
         assert not mock_handler_2.handled_events
+
+
+    def test__all_specified_handlers_are_called_for_event(self):
+        mock_handler_1 = RecorderSubscriber()
+        mock_handler_2 = RecorderSubscriber()
+
+        class TestEventBus(EventBus):
+            subscriptions = {'1': [mock_handler_1, mock_handler_2]}
+
+        test_event_bus = TestEventBus()
+        event = TestEvent('irrelevant')
+        test_event_bus.issue_synchronous(event)
+
+        assert mock_handler_1.handled_events[0] == event
+        assert mock_handler_2.handled_events[0] == event
+
+
+    def test__handler_without_handle_method_raises_attributeerror(self):
+        fake_handler = object()
+
+        class TestEventBus(EventBus):
+            subscriptions = {'1': [fake_handler]}
+
+        test_event_bus = TestEventBus()
+        event = TestEvent('irrelevant')
+
+        with self.assertRaises(AttributeError):
+            test_event_bus.issue_synchronous(event)
+
+
 
 
 
